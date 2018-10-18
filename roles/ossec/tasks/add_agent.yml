@@ -3,9 +3,9 @@
   template:
     src: 'add_agent'
     dest: '/var/ossec/add_agent'
-  connection: 'local'
+  delegate_to: "{{ alientvault_server }}"
 
 - name: add agents from template to ossec server
   shell: >
     /var/ossec/bin/manage_agents -f /add_agent
-  connection: 'local'
+  delegate_to: "{{ alientvault_server }}"

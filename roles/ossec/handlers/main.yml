@@ -3,4 +3,3 @@
   service:
     name: 'ossec'
     state: 'restarted'
-  sudo: yes
