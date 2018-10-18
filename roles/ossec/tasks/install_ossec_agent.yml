@@ -25,17 +25,22 @@
    chdir='/tmp/ossec-hids-2.8.2'
    bash ./install.sh
    creates=/var/ossec/etc/ossec.conf
-  sudo: yes
 
-- name: client_keys from server to agent
+- name: pull client_keys from AV server
+  fetch:
+    src: '/var/ossec/etc/client.keys'
+    dest: '/tmp/client.keys'
+    flat: yes
+  delegate_to: "{{ alientvault_server }}"
+
+- name: copy client_keys to agent
   copy:
-   src: '/var/ossec/etc/client.keys'
+   src: '/tmp/client.keys'
    dest: '/tmp/client.keys'
   register: keys
 
 - shell: >
      grep "{{ansible_default_ipv4.address}}" /tmp/client.keys  > /var/ossec/etc/client.keys
-  sudo: yes
   when: keys.changed
   notify: restart ossec
 
@@ -48,4 +53,3 @@
   service:
     name: 'ossec'
     state: 'started'
-  sudo: yes
